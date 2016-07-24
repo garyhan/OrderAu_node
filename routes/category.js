@@ -1,20 +1,23 @@
+/**
+ * Created by hanzhongjian on 16/7/24.
+ */
 var express = require('express');
 var router = express.Router();
 
-var brandDao = require('../dao/brandDao');
+var categoryDao = require('../dao/categoryDao');
 var commonDao = require('../dao/commonDao');
 
 router.get('', function (req, res, next) {
-    commonDao.queryAll(req, res, next, 'brand');
+    commonDao.queryAll(req, res, next, 'category');
 })
 router.put('', function (req, res, next) {
-    brandDao.add(req, res, next);
+    categoryDao.add(req, res, next);
 })
 router.post('', function (req, res, next) {
-    brandDao.update(req, res, next);
+    categoryDao.update(req, res, next);
 })
 router.delete('', function (req, res, next) {
-    commonDao.delete(req, res, next, 'brand');
+    commonDao.delete(req, res, next, 'category');
 })
 
 module.exports = router;

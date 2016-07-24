@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var brand = require('./routes/brand');
+var category=require('./routes/category');
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/brand', brand);
+app.use('/category',category);
 
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

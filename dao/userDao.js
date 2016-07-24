@@ -85,10 +85,9 @@ module.exports = {
                 } else {
                     //密码加密
                     var psw = util.md5Entry(para.psw);
-                    var regDate = new Date();
                     var regip = util.getClientIp(req);
                     //将数据插入数据库
-                    connection.query($sql.user.regUser, [para.username, para.username, psw, regDate, regip], function (err, result) {
+                    connection.query($sql.user.regUser, [para.username, para.username, psw, Date.now(), regip], function (err, result) {
                         if (err) {
                             jsonWrite(res, $error.serverError);
                             connection.release();
