@@ -10,6 +10,7 @@ var brand = require('./routes/brand');
 var category=require('./routes/category');
 var product = require('./routes/product');
 var customer = require('./routes/customer');
+var orderbill=require('./routes/order');
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use('/brand', brand);
 app.use('/category',category);
 app.use('/product',product);
 app.use('/customer',customer);
+app.use('/orderbill',orderbill);
 
 
 app.use(function (req, res, next) {

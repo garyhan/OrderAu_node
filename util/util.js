@@ -15,5 +15,8 @@ module.exports = {
             req.connection.remoteAddress ||
             req.socket.remoteAddress ||
             req.connection.socket.remoteAddress;
+    },
+    now:function(){
+        return new Date();
     }
 }

@@ -5,7 +5,7 @@ var user = {
     queryById: 'select * from laopo_cms_user_base where id=?',
     queryAll: 'select * from laopo_cms_user_base',
     queryByUsername: 'select * from laopo_cms_user_base WHERE account=?',
-    changePaw:'update laopo_cms_user_base SET pwd=? WHERE account=?',
+    changePaw: 'update laopo_cms_user_base SET pwd=? WHERE account=?',
     regUser: 'insert into laopo_cms_user_base(account,username,psw,regdate,regip) values(?,?,?,?,?)'
 }
 
@@ -39,9 +39,9 @@ var customer = {
 
 var expressBill = {
     add: 'insert into yixiaocuo_product(proname,c_id,code,protype,price,price_type,weight,pro_brand,teantid) values(?,?,?,?,?,?,?,?,?)',
-    delete: 'delete yixiaocuo_product WHERE id=?,teantid=?',
+    delete: 'UPDATE yixiaocuo_product SET isdelete=1 WHERE id=? and teantid=?',
     update: 'UPDATE yixiaocuo_product SET proname=?,c_id=?,code=?,protype=?,price=?,price_type=?,weight=?,pro_brand=? where teantid=?',
-    queryAll: 'SELECT * FROM yixiaocuo_product WHERE teantid=?'
+    queryAll: 'SELECT * FROM yixiaocuo_product WHERE teantid=? AND isdelete=0'
 }
 
 var dicStore = {
@@ -49,11 +49,12 @@ var dicStore = {
 }
 
 var order = {
-    add: '',
-    delete: '',
-    queryAll: '',
-    queryById: '',
-    update: ''
+    add: 'INSERT INTO yixiaocuo_sendproduct (proid,proname,ndate,price,buyprice,salerPrice,updateAt,num,exchangerate,yl,remark,customid,teantid) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
+    addList:'INSERT INTO yixiaocuo_sendproduct (proid,proname,ndate,price,buyprice,salerPrice,updateAt,num,exchangerate,yl,remark,pid,customid,teantid) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+    delete: 'UPDATE yixiaocuo_sendproduct SET isdelete=1 WHERE id=? and teantid=?',
+    queryAll: 'SELECT * FROM yixiaocuo_sendproduct WHERE teantid=? AND isdelete=0',
+    queryById: 'SELECT * FROM yixiaocuo_sendproduct WHERE (id=? or pid=?) AND teantid=? AND isdelete=0',
+    update: 'UPDATE yixiaocuo_sendproduct SET proid=?,proname=?,ndate=?,price=?,buyprice=?,salerPrice=?,updateAt=?,num=?,exchangerate=?,yl=?,remark=?,customid=? WHERE teantid=? AND '
 }
 
 var prodyctModel = {
