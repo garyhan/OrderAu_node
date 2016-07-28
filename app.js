@@ -8,6 +8,8 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var brand = require('./routes/brand');
 var category=require('./routes/category');
+var product = require('./routes/product');
+var customer = require('./routes/customer');
 
 var app = express();
 
@@ -24,6 +26,9 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/brand', brand);
 app.use('/category',category);
+app.use('/product',product);
+app.use('/customer',customer);
+
 
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

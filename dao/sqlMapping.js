@@ -5,13 +5,14 @@ var user = {
     queryById: 'select * from laopo_cms_user_base where id=?',
     queryAll: 'select * from laopo_cms_user_base',
     queryByUsername: 'select * from laopo_cms_user_base WHERE account=?',
+    changePaw:'update laopo_cms_user_base SET pwd=? WHERE account=?',
     regUser: 'insert into laopo_cms_user_base(account,username,psw,regdate,regip) values(?,?,?,?,?)'
 }
 
 var product = {
-    add: 'insert into yixiaocuo_product(proname,c_id,code,protype,price,price_type,pro_brand,ts,teantid) values(?,?,?,?,?,?,?,?,?)',
+    add: 'insert into yixiaocuo_product(pro_name,c_id,code,pro_type,price,price_type,pro_brand,ts,teantid) values(?,?,?,?,?,?,?,?,?)',
     delete: 'UPDATE yixiaocuo_product set isdelete=1,ts=? WHERE id=? and teantid=?',
-    update: 'UPDATE yixiaocuo_product SET proname=?,c_id=?,code=?,protype=?,price=?,price_type=?,pro_brand=?,ts=? where id=? AND teantid=?',
+    update: 'UPDATE yixiaocuo_product SET pro_name=?,c_id=?,code=?,pro_type=?,price=?,price_type=?,pro_brand=?,ts=? where id=? AND teantid=?',
     queryAll: 'SELECT * FROM yixiaocuo_product WHERE teantid=?'
 }
 
@@ -32,8 +33,8 @@ var category = {
 var customer = {
     add: 'insert into yixiaocuo_customer(u_name,u_mobile,ndate,teantid) values(?,?,?,?)',
     delete: 'UPDATE yixiaocuo_customer SET isdelete=1 WHERE id=? and teantid=?',
-    update: 'UPDATE yixiaocuo_product SET u_name=?,u_mobile=?,ndate=? where id=? AND teantid=?',
-    queryAll: 'SELECT * FROM yixiaocuo_product WHERE teantid=?'
+    update: 'UPDATE yixiaocuo_customer SET u_name=?,u_mobile=?,ndate=? where id=? AND teantid=?',
+    queryAll: 'SELECT * FROM yixiaocuo_customer WHERE teantid=? AND isdelete=0'
 }
 
 var expressBill = {
