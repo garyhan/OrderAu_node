@@ -7,6 +7,7 @@ var $sql = require('./sqlMapping');
 var jwt = require('../util/jwt');
 var util = require('../util/util');
 var $error = require('./errorMessage');
+var async = require('async');
 
 var pool = mysql.createPool($conf.mysql);
 
@@ -42,15 +43,12 @@ module.exports = {
              * }
              */
             var orderHead = getOrderTj(para, user.iss);
-            console.log(orderHead);
             //统计获取的信息
             pool.getConnection(function (err, connection) {
                 //proid,proname,ndate,price,buyprice,salerPrice,updateAt,num,exchangerate,yl,remark,pid,customid,teantid
                 connection.query($sql.order.add, orderHead, function (err, result) {
                     var ids = [];
-                    console.log(result);
                     var orderBody = getOrderInfo(para, result.insertId, user.iss);
-                    console.log(orderBody)
                     if (err) {
                         res.json($error.serverError)
                         return;
@@ -77,10 +75,89 @@ module.exports = {
             });
         });
     },
+    /**
+     * 更新订单信息
+     * 数据结构为
+     * {
+     *  id:'',
+     *  customid:'0',
+     *  remark:'',
+     *  title:'',
+     *  remark:'',
+     *  exchangerate:'',
+     *  list[
+     *      {
+     *          id,
+     *          proid,
+     *          proname,
+     *          price,
+     *          buyprice,
+     *          salerPrice,
+     *          yl,
+     *          remark,
+     *          exchangerate
+     *      }
+     *  ]
+     * }
+     * @param req
+     * @param res
+     * @param next
+     */
     update: function (req, res, next) {
+        var header = req.headers;
+        jwt.verify(header.token, function (err, user) {
+                if (err) {
+                    res.json($error.authError);
+                    return;
+                }
+                var para = req.body;
+                var orderHead = getOrderTj(para, user.iss);
+                orderHead.push(para.id);
 
+
+                async.waterfall([function (callback) {
+                    pool.getConnection(function (err, connection) {
+                        connection.query($sql.order.update, orderHead, function (err, result) {
+                            connection.release();
+                            var ids = [];
+                            if (err) {
+                                callback(err);
+                                return;
+                            }
+
+                            ids.push(result.insertId);
+                            callback(null, ids);
+                        });
+                    });
+                }, function (ids, callback) {
+                    pool.getConnection(function (err, connection) {
+                        var orderBody = getOrderInfoUpd(para, user.iss);
+                        //将其他数据拼装到数据中
+                        var count = 0;
+                        orderBody.forEach(function (e) {
+                            console.log(connection.query($sql.order.update, e, function (err, resinfo) {
+                                ids.push(resinfo.insertId);
+                                console.log(resinfo);
+                                count++;
+                                if (err)callback(err);
+                            }).sql);
+                        });
+                    });
+                    callback(null, "111");
+                }], function (err, result) {
+                    console.log(127+'-'+result);
+                    if (err) {
+                        res.json($error.serverError)
+                        return;
+                    }
+                    res.json($error.success);
+                });
+
+            }
+        )
+        ;
     },
-    getById:function(req,res,next){
+    getById: function (req, res, next) {
         var header = req.headers;
         jwt.verify(header.token, function (err, user) {
             if (err) {
@@ -89,9 +166,10 @@ module.exports = {
             }
             var para = req.body;
             pool.getConnection(function (err, connection) {
-                console.log(connection.query($sql.order.queryById, [para.id,para.id,user.iss], function (err, result) {
+                connection.query($sql.order.queryById, [para.id, para.id, user.iss], function (err, result) {
+                    connection.release();
                     res.json(result);
-                }).sql);
+                });
             });
         });
     }
@@ -115,6 +193,29 @@ function getOrderInfo(para, resultid, userid) {
         ass[11] = resultid;
         ass[12] = e.customid;
         ass[13] = userid;
+        insertValue.push(ass);
+    });
+    return insertValue;
+}
+
+function getOrderInfoUpd(para, userid) {
+    var insertValue = [];
+    para.list.forEach(function (e) {
+        var ass = [];
+        ass[0] = e.proid;
+        ass[1] = e.proname;
+        ass[2] = util.now();
+        ass[3] = e.price;
+        ass[4] = e.buyprice;
+        ass[5] = e.salerPrice;
+        ass[6] = util.now();
+        ass[7] = 0;
+        ass[8] = e.exchangerate;
+        ass[9] = e.yl;
+        ass[10] = e.remark;
+        ass[11] = e.customid;
+        ass[12] = userid;
+        ass[13] = e.id;
         insertValue.push(ass);
     });
     return insertValue;

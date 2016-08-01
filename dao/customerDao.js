@@ -20,6 +20,7 @@ module.exports = {
             var para = req.body;
             pool.getConnection(function (err, connection) {
                 connection.query($sql.customer.add, [para.uname, para.umobile, Date.now(), user.iss], function (err) {
+                    connection.release();
                     if (err) {
                         res.json($error.serverError)
                         return;
@@ -39,6 +40,7 @@ module.exports = {
             var para = req.body;
             pool.getConnection(function (err, connection) {
                 connection.query($sql.customer.update, [para.uname, para.umobile, Date.now(), para.key, user.iss], function (err) {
+                    connection.release();
                     if (err) {
                         res.json($error.serverError)
                         return

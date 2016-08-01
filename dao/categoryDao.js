@@ -21,7 +21,7 @@ module.exports = {
 
             pool.getConnection(function (err, connection) {
                 connection.query($sql.category.add, [para.cpid, para.cname, para.ccode, para.ctype, Date.now(), user.iss], function (err, result) {
-                    console.log(err);
+                    connection.release();
                     if (err) {
                         res.json($error.serverError)
                         return;
@@ -41,6 +41,7 @@ module.exports = {
             var para = req.body;
             pool.getConnection(function (err, connection) {
                 connection.query($sql.category.update, [para.cid, para.cname, para.ccode, para.ctype, Date.now(), para.key, user.iss], function (err, result) {
+                    connection.release();
                     if (err) {
                         res.json($error.serverError)
                         return

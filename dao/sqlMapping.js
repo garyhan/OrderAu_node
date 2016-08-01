@@ -54,7 +54,7 @@ var order = {
     delete: 'UPDATE yixiaocuo_sendproduct SET isdelete=1 WHERE id=? and teantid=?',
     queryAll: 'SELECT * FROM yixiaocuo_sendproduct WHERE teantid=? AND isdelete=0',
     queryById: 'SELECT * FROM yixiaocuo_sendproduct WHERE (id=? or pid=?) AND teantid=? AND isdelete=0',
-    update: 'UPDATE yixiaocuo_sendproduct SET proid=?,proname=?,ndate=?,price=?,buyprice=?,salerPrice=?,updateAt=?,num=?,exchangerate=?,yl=?,remark=?,customid=? WHERE teantid=? AND '
+    update: 'UPDATE yixiaocuo_sendproduct SET proid=?,proname=?,ndate=?,price=?,buyprice=?,salerPrice=?,updateAt=?,num=?,exchangerate=?,yl=?,remark=?,customid=? WHERE teantid=?  AND id=? '
 }
 
 var prodyctModel = {

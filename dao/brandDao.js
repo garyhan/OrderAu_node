@@ -21,7 +21,8 @@ module.exports = {
 
             //开始插入数据
             pool.getConnection(function (err, connection) {
-                connection.query($sql.brand.add, [para.brandname,para.brandcode,Date.now(),user.iss], function (err, result) {
+                connection.query($sql.brand.add, [para.brandname,para.brandcode,Date.now(),user.iss], function (err) {
+                    connection.release();
                     if(err){
                         res.json($error.serverError)
                         return;
@@ -44,6 +45,7 @@ module.exports = {
             //开始插入数据
             pool.getConnection(function (err, connection) {
                 connection.query($sql.brand.update, [para.brandname,user.iss,para.brandcode,Date.now(),para.key,user.iss], function (err, result) {
+                    connection.release();
                     if(err){
                         res.json($error.serverError)
                         return;

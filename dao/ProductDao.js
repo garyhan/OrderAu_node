@@ -32,6 +32,7 @@ module.exports = {
                     para.pro_brand,
                     Date.now(),
                     user.iss], function (err, result) {
+                    connection.release();
                     if(err){
                         res.json($error.serverError)
                         return;
@@ -65,6 +66,7 @@ module.exports = {
                     para.key,
                     user.iss
                 ], function (err, result) {
+                    connection.release();
                     if(err){
                         res.json($error.serverError)
                         return;

@@ -21,6 +21,7 @@ module.exports = {
             var para = req.body;
             pool.getConnection(function (err, connection) {
                 connection.query($sql[type].delete, [Date.now(), para.key, user.iss], function (err) {
+                    connection.release();
                     if (err) {
                         res.json($error.serverError)
                         return;
@@ -41,6 +42,7 @@ module.exports = {
             //开始插入数据
             pool.getConnection(function (err, connection) {
                 console.log(connection.query($sql[type].queryAll, [user.iss], function (err, result) {
+                    connection.release();
                     res.json(result);
                 }).sql);
             });
