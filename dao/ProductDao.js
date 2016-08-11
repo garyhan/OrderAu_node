@@ -12,7 +12,6 @@ var pool = mysql.createPool($conf.mysql);
 module.exports = {
     add: function (req, res, next) {
         var header = req.headers;
-        console.log(123);
         jwt.verify(header.token, function (err, user) {
             if (err) {
                 res.json($error.authError);

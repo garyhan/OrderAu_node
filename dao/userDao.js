@@ -57,8 +57,10 @@ module.exports = {
                 var token = jwt.sign(para)
                 var user = {};
 
+                console.log(result);
                 user.token = token;
                 user.name = result[0].username;
+                user.exchangeRate = result[0].exchangerate;
                 user.account = result[0].account;
                 jsonWrite(res, user);
                 connection.release();

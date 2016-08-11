@@ -8,7 +8,7 @@ var productDao = require('../dao/productDao');
 var commonDao = require('../dao/commonDao');
 
 router.get('', function (req, res, next) {
-    commonDao.queryAll(req, res, next, 'customer');
+    commonDao.queryAll(req, res, next, 'product');
 })
 router.put('', function (req, res, next) {
     productDao.add(req, res, next);
@@ -17,7 +17,7 @@ router.post('', function (req, res, next) {
     productDao.update(req, res, next);
 })
 router.delete('', function (req, res, next) {
-    commonDao.delete(req, res, next, 'customer');
+    commonDao.delete(req, res, next, 'product');
 })
 
 module.exports = router;

@@ -20,57 +20,29 @@ module.exports = {
                 return;
             }
             var para = req.body;
-            /***
-             * 数据格式
-             * {
-             *  customid:'0',
-             *  remark:'',
-             *  title:'',
-             *  remark:'',
-             *  exchangerate:'',
-             *  list[
-             *      {
-             *          proid,
-             *          proname,
-             *          price,
-             *          buyprice,
-             *          salerPrice,
-             *          yl,
-             *          remark,
-             *          exchangerate
-             *      }
-             *  ]
-             * }
-             */
             var orderHead = getOrderTj(para, user.iss);
             //统计获取的信息
             pool.getConnection(function (err, connection) {
-                //proid,proname,ndate,price,buyprice,salerPrice,updateAt,num,exchangerate,yl,remark,pid,customid,teantid
-                connection.query($sql.order.add, orderHead, function (err, result) {
+                connection.query(orderHead, function (err, result) {
                     var ids = [];
-                    var orderBody = getOrderInfo(para, result.insertId, user.iss);
                     if (err) {
                         res.json($error.serverError)
                         return;
                     }
-
-                    ids.push(result.insertId)
+                    var orderBody = getOrderInfo(para, result.insertId, user.iss);
+                    console.log(orderBody)
                     //将其他数据拼装到数据中
                     var count = 0;
-                    orderBody.forEach(function (e) {
-                        console.log(connection.query($sql.order.addList, e, function (err, resinfo) {
-                            console.log(result);
-                            if (err) {
-                                //清除
-                                res.json($error.serverError)
-                                return;
-                            }
-                            ids.push(resinfo.insertId);
-                            count++;
-                            if (count == orderBody.length)
-                                res.json($error.success);
-                        }).sql)
-                    });
+                    console.log(connection.query(orderBody, function (err, resinfo) {
+                        console.log(err)
+                        if (err) {
+                            //清除
+                            res.json($error.serverError)
+                            return;
+                        }
+                        count++;
+                        res.json($error.success);
+                    }).sql)
                 });
             });
         });
@@ -124,7 +96,7 @@ module.exports = {
                                 callback(err);
                                 return;
                             }
-
+                            //console.log(result);
                             ids.push(result.insertId);
                             callback(null, ids);
                         });
@@ -134,18 +106,16 @@ module.exports = {
                         var orderBody = getOrderInfoUpd(para, user.iss);
                         //将其他数据拼装到数据中
                         var count = 0;
-                        orderBody.forEach(function (e) {
-                            console.log(connection.query($sql.order.update, e, function (err, resinfo) {
-                                ids.push(resinfo.insertId);
-                                console.log(resinfo);
-                                count++;
-                                if (err)callback(err);
-                            }).sql);
-                        });
+                        console.log(connection.query($sql.order.update, orderBody, function (err, resinfo) {
+                            ids.push(resinfo.insertId);
+                            //console.log(resinfo);
+                            count++;
+                            if (err)callback(err);
+                        }).sql);
                     });
                     callback(null, "111");
                 }], function (err, result) {
-                    console.log(127+'-'+result);
+                    //console.log(127 + '-' + result);
                     if (err) {
                         res.json($error.serverError)
                         return;
@@ -159,16 +129,33 @@ module.exports = {
     },
     getById: function (req, res, next) {
         var header = req.headers;
+
         jwt.verify(header.token, function (err, user) {
             if (err) {
                 res.json($error.authError);
                 return;
             }
-            var para = req.body;
+            var para = req.params;
             pool.getConnection(function (err, connection) {
-                connection.query($sql.order.queryById, [para.id, para.id, user.iss], function (err, result) {
+                connection.query($sql.order.queryById, [para.id, user.iss], function (err, result) {
                     connection.release();
                     res.json(result);
+                });
+            });
+        });
+    },
+    queryAll: function (req, res, next) {
+        var header = req.headers;
+        jwt.verify(header.token, function (err, user) {
+            if (err) {
+                res.json($error.authError);
+                return;
+            }
+
+            pool.getConnection(function (err, connection) {
+                connection.query($sql.order.queryAll, [user.iss], function (err, result) {
+                    res.json(result);
+                    connection.release();
                 });
             });
         });
@@ -177,7 +164,9 @@ module.exports = {
 
 function getOrderInfo(para, resultid, userid) {
     var insertValue = [];
-    para.list.forEach(function (e) {
+
+    var value = "INSERT INTO yixiaocuo_sendproduct (proid,proname,ndate,price,buyprice,salerPrice,updateAt,num,exchangerate,yl,remark,pid,customid,teantid,forignPrice,forignSalePrice,forignYl) VALUES ";
+    para.list.forEach(function (e, i) {
         var ass = [];
         ass[0] = e.proid;
         ass[1] = e.proname;
@@ -194,13 +183,21 @@ function getOrderInfo(para, resultid, userid) {
         ass[12] = e.customid;
         ass[13] = userid;
         insertValue.push(ass);
+
+        value += "('"+ass[0] + "','" + ass[1] + "','" + ass[2] + "','" + ass[3] + "','" +
+            ass[4] + "','" + ass[5] + "','" + ass[6] + "','" + ass[7] + "','" +
+            ass[8] + "','" + ass[9] + "','" + ass[10] + "','" + ass[11] + "','" + ass[12] + "','" + ass[13] + "','"+e.forignPrice+"','"+e.forignSalePrice+"','"+e.forignYl+"')"
+        if (i != para.list.length - 1)
+            value = value + ",";
     });
-    return insertValue;
+    return value;
+    //return insertValue;
 }
 
 function getOrderInfoUpd(para, userid) {
     var insertValue = [];
-    para.list.forEach(function (e) {
+    var value = "(";
+    para.list.forEach(function (e, i) {
         var ass = [];
         ass[0] = e.proid;
         ass[1] = e.proname;
@@ -216,9 +213,17 @@ function getOrderInfoUpd(para, userid) {
         ass[11] = e.customid;
         ass[12] = userid;
         ass[13] = e.id;
+
+        value += ass[0] + ',' + ass[2] + ',' + ass[3] + ',' + ass[4] + ',' + ass[5] + ',' + ass[6] + ',' + ass[7] + ',' + ass[8] + ',' + ass[9] + ',' + ass[10] + ',' + ass[11] + ',' + ass[12]
+        if (i != 0)
+            value = "),(" + value
+
         insertValue.push(ass);
     });
-    return insertValue;
+
+    value += ')';
+    return value;
+    //return insertValue;
 }
 
 function getOrderTj(para, userid) {
@@ -226,27 +231,24 @@ function getOrderTj(para, userid) {
     orderHead[0] = 0;
     orderHead[1] = para.title;
     orderHead[2] = util.now();
+    orderHead[3] = para.price;
+    orderHead[4] = para.buyprice;
+    orderHead[5] = para.salerPrice;
     orderHead[6] = util.now();
     orderHead[7] = para.list.length;
     orderHead[8] = para.exchangerate;
+    orderHead[9] = para.yl;
     orderHead[10] = para.remark;
     orderHead[11] = para.customid;
     orderHead[12] = userid;
-    var price = 0.00;
-    var buyprice = 0.00;
-    var salerPrice = 0.00;
-    var yl = 0.00;
-    para.list.forEach(function (e) {
-        price += parseFloat(e.price);
-        buyprice += parseFloat(e.buyprice);
-        salerPrice += parseFloat(e.salerPrice);
-        yl += parseFloat(e.yl);
-        console.log(e);
-    });
-    orderHead[3] = price.toFixed(2);
-    orderHead[4] = buyprice.toFixed(2);
-    orderHead[5] = salerPrice.toFixed(2);
-    orderHead[9] = yl.toFixed(2);
-    console.log(orderHead);
-    return orderHead;
+    var value = 'INSERT INTO yixiaocuo_sendproduct ' +
+        "(proid,proname,ndate,price,buyprice,salerPrice,updateAt,num,exchangerate,yl,remark,customid,teantid,forignPrice,forignSalePrice,forignYl) " +
+        "VALUES('";
+    value += orderHead[0] + "','" + orderHead[1] + "','" +
+        orderHead[2] + "','" + orderHead[3] + "','" + orderHead[4] + "','" + orderHead[5] + "','" +
+        orderHead[6] + "','" + orderHead[7] + "','" + orderHead[8] + "','" + orderHead[9] + "','" +
+        orderHead[10] + "','" + orderHead[11] + "','" + orderHead[12]+"','"+ para.forignPrice+"','"+para.forignSalePrice+"','"+para.forignYl;
+    value = value + "')"
+    return value;
+    //return orderHead;
 }

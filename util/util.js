@@ -16,7 +16,28 @@ module.exports = {
             req.socket.remoteAddress ||
             req.connection.socket.remoteAddress;
     },
-    now:function(){
+    now: function () {
         return new Date();
+    },
+    getInsertSql: function (table, field, param) {
+        var sql = "INSERT INTO " + table + " (";
+        var insertField = "";
+        var insertValue = "";
+        for (var i = 0; i < field.length; i++) {
+            if (!param[field] || param[field] == 0) {
+                if (i == field.length - 1) {
+                    insertField += field;
+                    insertValue += param[field];
+                } else {
+                    insertField += field + ',';
+                    insertValue += param[field] + ',';
+                }
+            }
+        }
+        sql += ") VALUES (" + insertValue + ")";
+        return sql;
+    },
+    getUpdateSql: function (table, field, param) {
+
     }
 }
