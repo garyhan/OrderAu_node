@@ -22,12 +22,12 @@ module.exports = {
             //开始插入数据
             pool.getConnection(function (err, connection) {
                 console.log(connection.query($sql.product.add, [
-                    para.proname,
-                    para.cid,
+                    para.pro_name,
+                    para.c_id,
                     para.code,
-                    para.protype,
+                    para.pro_type,
                     para.price,
-                    para.price_type,
+                    'AUD',
                     para.pro_brand,
                     Date.now(),
                     user.iss], function (err, result) {
@@ -54,12 +54,12 @@ module.exports = {
             //开始插入数据
             pool.getConnection(function (err, connection) {
                 connection.query($sql.product.update, [
-                    para.proname,
-                    para.cid,
+                    para.pro_name,
+                    para.c_id,
                     para.code,
-                    para.protype,
+                    para.pro_type,
                     para.price,
-                    para.price_type,
+                    'AUD',
                     para.pro_brand,
                     Date.now(),
                     para.key,
