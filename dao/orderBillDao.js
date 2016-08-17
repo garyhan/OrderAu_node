@@ -30,11 +30,9 @@ module.exports = {
                         return;
                     }
                     var orderBody = getOrderInfo(para, result.insertId, user.iss);
-                    console.log(orderBody)
                     //将其他数据拼装到数据中
                     var count = 0;
                     console.log(connection.query(orderBody, function (err, resinfo) {
-                        console.log(err)
                         if (err) {
                             //清除
                             res.json($error.serverError)
@@ -176,7 +174,7 @@ function getOrderInfo(para, resultid, userid) {
         ass[5] = e.salerPrice;
         ass[6] = util.now();
         ass[7] = 0;
-        ass[8] = e.exchangerate;
+        ass[8] = e.exchangeRate;
         ass[9] = e.yl;
         ass[10] = e.remark;
         ass[11] = resultid;
@@ -207,7 +205,7 @@ function getOrderInfoUpd(para, userid) {
         ass[5] = e.salerPrice;
         ass[6] = util.now();
         ass[7] = 0;
-        ass[8] = e.exchangerate;
+        ass[8] = e.exchangeRate;
         ass[9] = e.yl;
         ass[10] = e.remark;
         ass[11] = e.customid;
@@ -236,7 +234,7 @@ function getOrderTj(para, userid) {
     orderHead[5] = para.salerPrice;
     orderHead[6] = util.now();
     orderHead[7] = para.list.length;
-    orderHead[8] = para.exchangerate;
+    orderHead[8] = para.exchangeRate;
     orderHead[9] = para.yl;
     orderHead[10] = para.remark;
     orderHead[11] = para.customid;

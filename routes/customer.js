@@ -7,8 +7,11 @@ var router = express.Router();
 var customerDao = require('../dao/customerDao');
 var commonDao = require('../dao/commonDao');
 
-router.get('', function (req, res, next) {
+router.get('/', function (req, res, next) {
     commonDao.queryAll(req, res, next, 'customer');
+})
+router.get('/:id', function (req, res, next) {
+    commonDao.getOne(req, res, next,'customer');
 })
 router.put('', function (req, res, next) {
     customerDao.add(req, res, next);
@@ -16,7 +19,7 @@ router.put('', function (req, res, next) {
 router.post('', function (req, res, next) {
     customerDao.update(req, res, next);
 })
-router.delete('', function (req, res, next) {
+router.delete('/:id', function (req, res, next) {
     commonDao.delete(req, res, next, 'customer');
 })
 

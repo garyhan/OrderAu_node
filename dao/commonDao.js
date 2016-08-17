@@ -11,6 +11,26 @@ var $error = require('./errorMessage');
 var pool = mysql.createPool($conf.mysql);
 
 module.exports = {
+    getOne:function(req,res,next,type){
+        var header = req.headers;
+        jwt.verify(header.token, function (err, user) {
+            if (err) {
+                res.json($error.authError);
+                return
+            }
+            var para = req.params;
+                pool.getConnection(function (err, connection) {
+                    console.log(connection.query($sql[type].getOneById, [para.id, user.iss], function (err,result) {
+                        connection.release();
+                        if (err) {
+                            res.json($error.serverError)
+                            return;
+                        }
+                        res.json(result[0]);
+                    }))
+                });
+        });
+    },
     delete:function(req,res,next,type) {
         var header = req.headers;
         jwt.verify(header.token, function (err, user) {
@@ -18,16 +38,16 @@ module.exports = {
                 res.json($error.authError);
                 return
             }
-            var para = req.body;
+            var para = req.params;
             pool.getConnection(function (err, connection) {
-                connection.query($sql[type].delete, [Date.now(), para.key, user.iss], function (err) {
+                console.log(connection.query($sql[type].delete, [Date.now(), para.id, user.iss], function (err) {
                     connection.release();
                     if (err) {
                         res.json($error.serverError)
                         return;
                     }
                     res.json($error.success);
-                })
+                }))
             });
         })
     },

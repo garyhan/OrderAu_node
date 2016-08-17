@@ -17,7 +17,8 @@ module.exports = {
             req.connection.socket.remoteAddress;
     },
     now: function () {
-        return new Date();
+        var date = new Date;
+        return date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     },
     getInsertSql: function (table, field, param) {
         var sql = "INSERT INTO " + table + " (";

@@ -21,14 +21,14 @@ module.exports = {
 
             //开始插入数据
             pool.getConnection(function (err, connection) {
-                connection.query($sql.brand.add, [para.brandname,para.brandcode,Date.now(),user.iss], function (err) {
+                console.log(connection.query($sql.brand.add, [para.b_name,para.code,Date.now(),user.iss], function (err) {
                     connection.release();
                     if(err){
                         res.json($error.serverError)
                         return;
                     }
                     res.json($error.success);
-                });
+                }));
             });
         });
     },
@@ -44,7 +44,7 @@ module.exports = {
 
             //开始插入数据
             pool.getConnection(function (err, connection) {
-                connection.query($sql.brand.update, [para.brandname,user.iss,para.brandcode,Date.now(),para.key,user.iss], function (err, result) {
+                connection.query($sql.brand.update, [para.b_name,user.iss,para.code,Date.now(),para.key,user.iss], function (err, result) {
                     connection.release();
                     if(err){
                         res.json($error.serverError)

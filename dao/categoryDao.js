@@ -20,7 +20,7 @@ module.exports = {
             var para = req.body;
 
             pool.getConnection(function (err, connection) {
-                connection.query($sql.category.add, [para.cpid, para.cname, para.ccode, para.ctype, Date.now(), user.iss], function (err, result) {
+                connection.query($sql.category.add, [para.c_pid, para.c_name, para.c_code, para.c_type, Date.now(), user.iss], function (err, result) {
                     connection.release();
                     if (err) {
                         res.json($error.serverError)
@@ -40,7 +40,7 @@ module.exports = {
             }
             var para = req.body;
             pool.getConnection(function (err, connection) {
-                connection.query($sql.category.update, [para.cid, para.cname, para.ccode, para.ctype, Date.now(), para.key, user.iss], function (err, result) {
+                connection.query($sql.category.update, [para.c_id, para.c_name, para.c_code, para.c_type, Date.now(), para.key, user.iss], function (err, result) {
                     connection.release();
                     if (err) {
                         res.json($error.serverError)

@@ -13,28 +13,32 @@ var product = {
     add: 'insert into yixiaocuo_product(pro_name,c_id,code,pro_type,price,price_type,pro_brand,ts,teantid) values(?,?,?,?,?,?,?,?,?)',
     delete: 'UPDATE yixiaocuo_product set isdelete=1,ts=? WHERE id=? and teantid=?',
     update: 'UPDATE yixiaocuo_product SET pro_name=?,c_id=?,code=?,pro_type=?,price=?,price_type=?,pro_brand=?,ts=? where id=? AND teantid=?',
-    queryAll: 'SELECT * FROM yixiaocuo_product WHERE teantid=?'
+    queryAll: 'SELECT * FROM yixiaocuo_product WHERE teantid=? AND isdelete=0',
+    getOneById: 'SELECT * FROM yixiaocuo_product WHERE id=? and teantid=?'
 }
 
 var brand = {
-    add: 'insert into yixiaocuo_brand(b_name,b_state,code,ts,teantid) values(?,?,?,?)',
+    add: 'insert into yixiaocuo_brand(b_name,code,ts,teantid) values(?,?,?,?)',
     delete: 'UPDATE yixiaocuo_brand SET isdelete=1,ts=? WHERE id=? AND teantid=?',
     update: 'UPDATE yixiaocuo_brand SET b_name=?,teantid=?,code=?,ts=? where id=? AND teantid=?',
-    queryAll: 'SELECT * FROM yixiaocuo_brand WHERE teantid=? AND isdelete=0'
+    queryAll: 'SELECT * FROM yixiaocuo_brand WHERE teantid=? AND isdelete=0',
+    getOneById: 'SELECT * FROM yixiaocuo_brand WHERE id=? and teantid=?'
 }
 
 var category = {
     add: 'insert into yixiaocuo_category(c_pid,c_name,c_code,c_type,ts,teantid) values(?,?,?,?,?,?)',
     delete: 'UPDATE yixiaocuo_category set isdelete=1,ts=?  WHERE id=? AND teantid=?',
     update: 'UPDATE yixiaocuo_category SET c_pid=?,c_name=?,c_code=?,c_type=?,ts=? where id=? AND teantid=?',
-    queryAll: 'SELECT * FROM yixiaocuo_category WHERE teantid=? AND isdelete=0'
+    queryAll: 'SELECT * FROM yixiaocuo_category WHERE teantid=? AND isdelete=0',
+    getOneById: 'SELECT * FROM yixiaocuo_category WHERE id=? and teantid=?'
 }
 
 var customer = {
     add: 'insert into yixiaocuo_customer(u_name,u_mobile,ndate,teantid) values(?,?,?,?)',
-    delete: 'UPDATE yixiaocuo_customer SET isdelete=1 WHERE id=? and teantid=?',
+    delete: 'UPDATE yixiaocuo_customer SET isdelete=1,ts=? WHERE id=? and teantid=?',
     update: 'UPDATE yixiaocuo_customer SET u_name=?,u_mobile=?,ndate=? where id=? AND teantid=?',
-    queryAll: 'SELECT * FROM yixiaocuo_customer WHERE teantid=? AND isdelete=0'
+    queryAll: 'SELECT * FROM yixiaocuo_customer WHERE teantid=? AND isdelete=0',
+    getOneById: 'SELECT * FROM yixiaocuo_customer WHERE id=? and teantid=?'
 }
 
 var expressBill = {
