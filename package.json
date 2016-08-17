@@ -15,6 +15,7 @@
     "serve-favicon": "~2.3.0",
     "mysql" : "latest",
     "jsonwebtoken":"6.2.0",
-    "async":"latest"
+    "async":"latest",
+    "sequelize":"latest"
   }
 }

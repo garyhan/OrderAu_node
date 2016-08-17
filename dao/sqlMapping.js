@@ -56,7 +56,7 @@ var order = {
     add: 'INSERT INTO yixiaocuo_sendproduct ' +
     '(proid,proname,ndate,price,buyprice,salerPrice,updateAt,num,exchangerate,yl,remark,customid,teantid) ' +
     'VALUES ?',
-    addList:'INSERT INTO yixiaocuo_sendproduct (proid,proname,ndate,price,buyprice,salerPrice,updateAt,num,exchangerate,yl,remark,pid,customid,teantid) VALUES ?',
+    addList: 'INSERT INTO yixiaocuo_sendproduct (proid,proname,ndate,price,buyprice,salerPrice,updateAt,num,exchangerate,yl,remark,pid,customid,teantid) VALUES ?',
     delete: 'UPDATE yixiaocuo_sendproduct SET isdelete=1 WHERE id=? and teantid=?',
     queryAll: 'SELECT * FROM yixiaocuo_sendproduct WHERE teantid=? AND isdelete=0 AND pid=0',
     queryById: 'SELECT * FROM yixiaocuo_sendproduct WHERE (pid=?) AND teantid=? AND isdelete=0',
@@ -71,6 +71,10 @@ var prodyctModel = {
     update: ''
 }
 
+var configSql = {
+    getType:'SELECT * FROM yixiaocuo_dicStore WHERE type=?'
+}
+
 var sqlObject = {};
 sqlObject.user = user;
 sqlObject.product = product;
@@ -81,5 +85,6 @@ sqlObject.expressBill = expressBill;
 sqlObject.dicStore = dicStore;
 sqlObject.order = order;
 sqlObject.prodyctModel = prodyctModel;
+sqlObject.configSql=configSql;
 
 module.exports = sqlObject;

@@ -11,6 +11,7 @@ var category=require('./routes/category');
 var product = require('./routes/product');
 var customer = require('./routes/customer');
 var orderbill=require('./routes/order');
+var configMsg=require('./routes/configMsg');
 
 var app = express();
 
@@ -30,6 +31,8 @@ app.use('/category',category);
 app.use('/product',product);
 app.use('/customer',customer);
 app.use('/orderbill',orderbill);
+app.use('/configmsg',configMsg);
+
 
 
 app.use(function (req, res, next) {
