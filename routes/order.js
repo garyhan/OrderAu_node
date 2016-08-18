@@ -18,6 +18,9 @@ router.put('/', function (req, res, next) {
 router.post('/', function (req, res, next) {
     orderDao.update(req, res, next);
 })
+router.post('/:id', function (req, res, next) {
+    orderDao.changeCustomer(req, res, next);
+})
 router.delete('/:id', function (req, res, next) {
     orderDao.delete(req, res, next);
 })

@@ -127,7 +127,6 @@ module.exports = {
     },
     getById: function (req, res, next) {
         var header = req.headers;
-
         jwt.verify(header.token, function (err, user) {
             if (err) {
                 res.json($error.authError);
@@ -135,9 +134,19 @@ module.exports = {
             }
             var para = req.params;
             pool.getConnection(function (err, connection) {
-                connection.query($sql.order.queryById, [para.id, user.iss], function (err, result) {
+                connection.query($sql.order.queryById, [para.id, para.id, user.iss], function (err, result) {
                     connection.release();
-                    res.json(result);
+                    var ls = [];
+                    var main = {};
+                    for (let i = 0; i < result.length; i++) {
+                        if (result[i].pid == 0) {
+                            main = result[i];
+                        } else {
+                            ls.push(result[i]);
+                        }
+                    }
+                    main.list = ls;
+                    res.json(main);
                 });
             });
         });
@@ -155,6 +164,26 @@ module.exports = {
                     res.json(result);
                     connection.release();
                 });
+            });
+        });
+    },
+    changeCustomer: function (req, res, next) {
+        var header = req.headers;
+        jwt.verify(header.token, function (err, user) {
+            if (err) {
+                res.json($error.authError);
+                return;
+            }
+            var para = req.body;
+            pool.getConnection(function (err, connection) {
+                console.log(connection.query($sql.order.changeCustomer, [para.customerid, para.id, user.iss], function (err, result) {
+                    connection.release();
+                    if (err) {
+                        res.json($error.serverError)
+                        return;
+                    }
+                    res.json($error.success);
+                }));
             });
         });
     }
@@ -182,9 +211,9 @@ function getOrderInfo(para, resultid, userid) {
         ass[13] = userid;
         insertValue.push(ass);
 
-        value += "('"+ass[0] + "','" + ass[1] + "','" + ass[2] + "','" + ass[3] + "','" +
+        value += "('" + ass[0] + "','" + ass[1] + "','" + ass[2] + "','" + ass[3] + "','" +
             ass[4] + "','" + ass[5] + "','" + ass[6] + "','" + ass[7] + "','" +
-            ass[8] + "','" + ass[9] + "','" + ass[10] + "','" + ass[11] + "','" + ass[12] + "','" + ass[13] + "','"+e.forignPrice+"','"+e.forignSalePrice+"','"+e.forignYl+"')"
+            ass[8] + "','" + ass[9] + "','" + ass[10] + "','" + ass[11] + "','" + ass[12] + "','" + ass[13] + "','" + e.forignPrice + "','" + e.forignSalePrice + "','" + e.forignYl + "')"
         if (i != para.list.length - 1)
             value = value + ",";
     });
@@ -245,7 +274,7 @@ function getOrderTj(para, userid) {
     value += orderHead[0] + "','" + orderHead[1] + "','" +
         orderHead[2] + "','" + orderHead[3] + "','" + orderHead[4] + "','" + orderHead[5] + "','" +
         orderHead[6] + "','" + orderHead[7] + "','" + orderHead[8] + "','" + orderHead[9] + "','" +
-        orderHead[10] + "','" + orderHead[11] + "','" + orderHead[12]+"','"+ para.forignPrice+"','"+para.forignSalePrice+"','"+para.forignYl;
+        orderHead[10] + "','" + orderHead[11] + "','" + orderHead[12] + "','" + para.forignPrice + "','" + para.forignSalePrice + "','" + para.forignYl;
     value = value + "')"
     return value;
     //return orderHead;

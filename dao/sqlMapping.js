@@ -59,7 +59,8 @@ var order = {
     addList: 'INSERT INTO yixiaocuo_sendproduct (proid,proname,ndate,price,buyprice,salerPrice,updateAt,num,exchangerate,yl,remark,pid,customid,teantid) VALUES ?',
     delete: 'UPDATE yixiaocuo_sendproduct SET isdelete=1 WHERE id=? and teantid=?',
     queryAll: 'SELECT * FROM yixiaocuo_sendproduct WHERE teantid=? AND isdelete=0 AND pid=0',
-    queryById: 'SELECT * FROM yixiaocuo_sendproduct WHERE (pid=?) AND teantid=? AND isdelete=0',
+    queryById: 'SELECT * FROM yixiaocuo_sendproduct WHERE (pid=? or id=?) AND teantid=? AND isdelete=0',
+    changeCustomer:'UPDATE yixiaocuo_sendproduct SET customid=? WHERE id=? AND teantid=?',
     update: 'UPDATE yixiaocuo_sendproduct SET proid=?,proname=?,ndate=?,price=?,buyprice=?,salerPrice=?,updateAt=?,num=?,exchangerate=?,yl=?,remark=?,customid=? WHERE teantid=?  AND id=? '
 }
 
